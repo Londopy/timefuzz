@@ -1,0 +1,42 @@
+[build-system]
+requires = ["maturin>=1.5,<2"]
+build-backend = "maturin"
+
+[project]
+name = "timefuzz"
+version = "0.2.0"
+description = "Fuzzy, natural-language time parsing that goes past dateparser — resolves phrases like 'sometime next week' into datetimes or ranges, with a confidence score."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Londopy" }]
+requires-python = ">=3.10"
+keywords = ["datetime", "parsing", "nlp", "fuzzy", "natural-language", "dates"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Libraries",
+]
+
+[project.urls]
+Homepage = "https://github.com/Londopy/timefuzz"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "hypothesis>=6", "ruff>=0.4"]
+
+[tool.maturin]
+python-source = "python"
+module-name = "timefuzz._core"
+features = ["pyo3/extension-module"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

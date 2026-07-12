@@ -1,0 +1,35 @@
+{"text": "my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-03T09:00:00", "confidence": 0.95}}
+{"text": "on my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-03T09:00:00", "confidence": 0.95}}
+{"text": "2nd tuesday after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-11T09:00:00", "confidence": 0.9}}
+{"text": "the week after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "range", "start": "2026-08-10T00:00:00", "end": "2026-08-16T23:59:59", "confidence": 0.9}}
+{"text": "the week before my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "range", "start": "2026-07-27T00:00:00", "end": "2026-08-02T23:59:59", "confidence": 0.9}}
+{"text": "the month after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "range", "start": "2026-09-01T00:00:00", "end": "2026-09-30T23:59:59", "confidence": 0.9}}
+{"text": "the weekend after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "range", "start": "2026-08-08T00:00:00", "end": "2026-08-09T23:59:59", "confidence": 0.9}}
+{"text": "3 business days after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-06T09:00:00", "confidence": 0.9}}
+{"text": "2 business days before my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-07-30T09:00:00", "confidence": 0.9}}
+{"text": "first business day of next month", "expect": {"kind": "instant", "when": "2026-08-03T09:00:00", "confidence": 0.85}}
+{"text": "3rd business day of next month", "expect": {"kind": "instant", "when": "2026-08-05T09:00:00", "confidence": 0.85}}
+{"text": "first business day of the month", "expect": {"kind": "instant", "when": "2026-07-01T09:00:00", "confidence": 0.85}}
+{"text": "25th business day of next month", "expect": {"kind": "no_parse", "reason_contains": "fewer than"}}
+{"text": "5 business days ago", "expect": {"kind": "instant", "when": "2026-07-06T09:00:00", "confidence": 0.9}}
+{"text": "eom", "expect": {"kind": "instant", "when": "2026-07-31T09:00:00", "confidence": 0.85}}
+{"text": "eoq", "expect": {"kind": "instant", "when": "2026-09-30T09:00:00", "confidence": 0.85}}
+{"text": "eoy", "expect": {"kind": "instant", "when": "2026-12-31T09:00:00", "confidence": 0.85}}
+{"text": "eow", "expect": {"kind": "instant", "when": "2026-07-12T09:00:00", "confidence": 0.85}}
+{"text": "friday next week", "expect": {"kind": "instant", "when": "2026-07-17T09:00:00", "confidence": 0.95}}
+{"text": "monday last week", "expect": {"kind": "instant", "when": "2026-06-29T09:00:00", "confidence": 0.95}}
+{"text": "tuesday this week", "expect": {"kind": "instant", "when": "2026-07-07T09:00:00", "confidence": 0.75, "interpretation_contains": "passed"}}
+{"text": "this weekend", "expect": {"kind": "range", "start": "2026-07-11T00:00:00", "end": "2026-07-12T23:59:59", "confidence": 0.9}}
+{"text": "last weekend", "expect": {"kind": "range", "start": "2026-07-04T00:00:00", "end": "2026-07-05T23:59:59", "confidence": 0.9}}
+{"text": "next weekend", "expect": {"kind": "range", "start": "2026-07-18T00:00:00", "end": "2026-07-19T23:59:59", "confidence": 0.9}}
+{"text": "next weekend", "now": "2026-07-08T12:00:00", "expect": {"kind": "ambiguous", "n_candidates": 2, "reason_contains": "midweek"}}
+{"text": "sometime next weekend", "expect": {"kind": "range", "start": "2026-07-18T00:00:00", "end": "2026-07-19T23:59:59", "confidence": 0.8}}
+{"text": "august", "expect": {"kind": "range", "start": "2026-08-01T00:00:00", "end": "2026-08-31T23:59:59", "confidence": 0.7}}
+{"text": "march", "expect": {"kind": "range", "start": "2027-03-01T00:00:00", "end": "2027-03-31T23:59:59", "confidence": 0.7, "interpretation_contains": "passed"}}
+{"text": "july", "expect": {"kind": "ambiguous", "n_candidates": 2, "reason_contains": "current month"}}
+{"text": "sometime early next month", "expect": {"kind": "range", "start": "2026-08-01T00:00:00", "end": "2026-08-10T23:59:59", "confidence": 0.7}}
+{"text": "sometime late next week", "expect": {"kind": "range", "start": "2026-07-17T00:00:00", "end": "2026-07-19T23:59:59", "confidence": 0.7}}
+{"text": "mid month", "expect": {"kind": "range", "start": "2026-07-11T00:00:00", "end": "2026-07-20T23:59:59", "confidence": 0.75}}
+{"text": "in 15 years", "expect": {"kind": "instant", "when": "2041-07-12T15:30:00", "confidence": 0.9, "interpretation_contains": "distant horizon"}}
+{"text": "in 5 years", "expect": {"kind": "instant", "when": "2031-07-12T15:30:00", "confidence": 0.95}}
+{"text": "20 years ago", "expect": {"kind": "instant", "when": "2006-07-12T15:30:00", "confidence": 0.9, "interpretation_contains": "distant horizon"}}
