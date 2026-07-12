@@ -50,7 +50,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: Build and install
         run: |
-          pip install maturin pytest hypothesis
+          pip install maturin pytest hypothesis tzdata
           maturin build --release -o dist
           pip install --no-index --find-links dist timefuzz
       - name: Run corpus suite

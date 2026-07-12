@@ -72,7 +72,7 @@ jobs:
           path: dist
       - run: |
           pip install --no-index --find-links dist timefuzz
-          pip install pytest hypothesis
+          pip install pytest hypothesis tzdata
           pytest tests -q
 
   publish:
