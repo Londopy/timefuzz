@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.1 — 2026-07-12
+
+- Release CI: the retired `macos-13` runner label left the macOS x86-64 wheel
+  job queued forever; moved to `macos-15-intel` (GitHub's last Intel image,
+  supported to Aug 2027).
+- CI (from 0.3.0's first runs): install `tzdata` on Windows runners so the
+  zoneinfo tests pass.
+
 ## 0.3.0 — 2026-07-12
 
 Pre-1.0 groundwork: the i18n seam, clock-time support, and a written API

@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "timefuzz"
-version = "0.3.0"
+version = "0.3.1"
 description = "Fuzzy, natural-language time parsing that goes past dateparser — resolves phrases like 'sometime next week' into datetimes or ranges, with a confidence score."
 readme = "README.md"
 license = { text = "MIT" }
