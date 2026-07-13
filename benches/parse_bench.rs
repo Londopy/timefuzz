@@ -3,6 +3,7 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 use std::collections::HashMap;
 use timefuzz::config::Cfg;
+use timefuzz::locale::EN;
 use timefuzz::{parse_str, tokenize};
 
 const PHRASES: &[&str] = &[
@@ -59,7 +60,7 @@ fn bench_parse(c: &mut Criterion) {
     c.bench_function("tokenize_only", |b| {
         b.iter(|| {
             for p in PHRASES {
-                black_box(tokenize::tokenize(black_box(p), &anchor_names));
+                black_box(tokenize::tokenize(black_box(p), &anchor_names, &EN));
             }
         })
     });

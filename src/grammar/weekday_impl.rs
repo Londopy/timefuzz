@@ -34,10 +34,7 @@ pub fn try_match(tokens: &[Tok], ctx: &Ctx) -> RuleResult {
                     ctx,
                     next_weekday(today, *w, true),
                     confidence::EXACT,
-                    format!(
-                        "next {name}, default {}",
-                        ctx.cfg.default_time.format("%H:%M")
-                    ),
+                    format!("next {name}, {}", ctx.tod_label()),
                 ))
             }
         }

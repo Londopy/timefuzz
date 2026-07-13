@@ -31,6 +31,16 @@ fn shift(now: NaiveDateTime, unit: &Unit, n: i64) -> Option<(NaiveDateTime, &'st
     })
 }
 
+/// An explicit trailing time ("in 3 days at 5pm") overrides the clock for
+/// date-granular units; minute/hour arithmetic keeps its own clock.
+fn apply_tod(ctx: &Ctx, unit: &Unit, when: NaiveDateTime) -> NaiveDateTime {
+    if ctx.explicit_time && !matches!(unit, Unit::Minute | Unit::Hour) {
+        when.date().and_time(ctx.tod)
+    } else {
+        when
+    }
+}
+
 fn plural(n: i64, s: &str) -> String {
     if n == 1 {
         format!("1 {s}")
@@ -51,25 +61,45 @@ pub fn try_match(tokens: &[Tok], ctx: &Ctx) -> RuleResult {
             ctx,
             today,
             confidence::EXACT,
-            "today at the default time".into(),
+            format!("today, {}", ctx.tod_label()),
         )),
         [Tok::Kw(Kw::Tomorrow)] => RuleResult::One(day_instant(
             ctx,
             today + Duration::days(1),
             confidence::EXACT,
-            "tomorrow at the default time".into(),
+            format!("tomorrow, {}", ctx.tod_label()),
         )),
         [Tok::Kw(Kw::Yesterday)] => RuleResult::One(day_instant(
             ctx,
             today - Duration::days(1),
             confidence::EXACT,
-            "yesterday at the default time".into(),
+            format!("yesterday, {}", ctx.tod_label()),
         )),
+        // bare clock time: "3pm", "15:45", "noon"
+        [Tok::Time(h, m)] => {
+            let t = chrono::NaiveTime::from_hms_opt(*h, *m, 0).unwrap();
+            let (d, note) = if ctx.now.time() < t {
+                (today, "today")
+            } else {
+                (
+                    today + Duration::days(1),
+                    "tomorrow (that time has already passed today)",
+                )
+            };
+            RuleResult::One(Resolution {
+                value: Value::Instant {
+                    when: d.and_time(t),
+                },
+                confidence: confidence::STRONG,
+                interpretation: format!("{h:02}:{m:02} {note}"),
+            })
+        }
         // "in N <unit>" / "N <unit> from now"
         [Tok::Kw(Kw::In), Tok::Num(n), Tok::Unit(u)]
         | [Tok::Num(n), Tok::Unit(u), Tok::Kw(Kw::From), Tok::Kw(Kw::Now)] => {
             match shift(ctx.now, u, *n) {
                 Some((when, name)) => {
+                    let when = apply_tod(ctx, u, when);
                     let days = (when.date() - ctx.today()).num_days();
                     let conf = confidence::horizon_penalty(confidence::EXACT, days);
                     let note = if conf < confidence::EXACT {
@@ -89,6 +119,7 @@ pub fn try_match(tokens: &[Tok], ctx: &Ctx) -> RuleResult {
         // "N <unit> ago"
         [Tok::Num(n), Tok::Unit(u), Tok::Kw(Kw::Ago)] => match shift(ctx.now, u, -*n) {
             Some((when, name)) => {
+                let when = apply_tod(ctx, u, when);
                 let days = (when.date() - ctx.today()).num_days();
                 let conf = confidence::horizon_penalty(confidence::EXACT, days);
                 let note = if conf < confidence::EXACT {

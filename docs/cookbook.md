@@ -105,6 +105,22 @@ else:
     book_campsite(r.start, r.end)   # Sat 00:00 .. Sun 23:59:59
 ```
 
+## Exact meeting times from fuzzy phrases
+
+Trailing clock times ride along with any date rule, so one parse handles
+"put it on the calendar":
+
+```python
+r = tf.parse("first business day of next month at 8am")
+r.when                       # e.g. datetime(2026, 8, 3, 8, 0)
+
+r = tf.parse("3pm")          # bare time -> next occurrence
+r.interpretation             # "15:00 tomorrow (that time has already passed today)"
+```
+
+`Ambiguous` candidates carry the time too — "sunday at 3pm" said on a Sunday
+gives you both Sundays at 15:00, ready for a two-button confirm.
+
 ## Timezone-aware scheduling
 
 ```python

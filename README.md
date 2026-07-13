@@ -124,6 +124,8 @@ class Config:
   birthday`, `the day before the wedding`, `2 weeks after my birthday`,
   `the week after my birthday`, `3 business days after the invoice date`,
   bare `on my birthday` (anchors supplied by you)
+- **Clock times:** `next friday at 3pm`, `tomorrow at 7:30`, `friday at
+  midnight`, bare `3pm` / `15:45` / `noon` (next occurrence)
 - **Vague spans:** `sometime next week`, `sometime in august`, `early march`,
   `mid q3`, `mid month`, `late next month`, `sometime early next month`
 - **Business calendar:** `next business day`, `in 3 business days`,
@@ -140,7 +142,8 @@ These are deliberate, documented choices — see the config knobs above:
 
 - **"next Friday" when today is Friday** is culture-dependent. Default:
   skip today (`next_skips_today=True`), i.e. you get the Friday seven days out.
-- **Date-only results get `default_time`** (09:00 by default).
+- **Date-only results get `default_time`** (09:00 by default); an explicit
+  trailing time (`… at 3pm`) overrides it.
 - **Arithmetic offsets keep the clock:** `in 3 days` = now + 72h;
   `tomorrow` = tomorrow at `default_time`.
 - **Ranges are inclusive**, `00:00:00` through `23:59:59` of the last day.
@@ -178,7 +181,9 @@ fixed reference `now`) to expected outputs. Adding a phrase = adding a line.
 - **v0.2** — ✅ richer anchored phrases + business-calendar rules
 - **v0.3** — ✅ confidence-model refinement, more `Ambiguous` candidates
 - **v0.4** — ✅ corpus expansion, benches, cookbook growth
-- **v1.0** — stable API, i18n-ready grammar structure (English-only until then)
+- **v1.0** — ✅ i18n-ready grammar structure (`Locale` seam, English-only),
+  ✅ clock-time support, ✅ written [stability policy](docs/stability.md);
+  remaining: a soak period on 0.3.x, then the freeze
 
 See [CHANGELOG.md](CHANGELOG.md) for details.
 

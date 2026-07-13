@@ -1,5 +1,39 @@
 # Changelog
 
+## 0.3.0 — 2026-07-12
+
+Pre-1.0 groundwork: the i18n seam, clock-time support, and a written API
+stability policy.
+
+### i18n-ready grammar structure
+- All language-specific word tables (weekdays, months, units, keywords,
+  numbers, ordinals, fillers, shorthand, am/pm, noon/midnight) extracted into
+  a `Locale` struct (`src/locale.rs`); the tokenizer takes a locale and the
+  grammar rules are fully language-neutral.
+- English (`EN`) is the built-in default via `Cfg.locale`.
+- Proven by unit tests: a miniature Spanish locale tokenizes and parses
+  end-to-end with zero grammar changes. `cargo test --lib` added to CI.
+- Python API unchanged; locale selection will be exposed post-1.0.
+
+### Clock-time support
+- Trailing times override the default time of day: `next friday at 3pm`,
+  `tomorrow at 7:30`, `end of month at 5pm`, `the tuesday after my birthday
+  at 5pm` — works with every date-producing rule, including `Ambiguous`
+  candidates.
+- Bare times: `3pm`, `15:45`, `noon`, `midnight` resolve to the next
+  occurrence (today, or tomorrow if passed).
+- Formats: `3pm`, `3 pm`, `3:30pm`, `7:30`, `15:45`, `noon`, `midnight`;
+  `12pm`=noon, `12am`=midnight; invalid times (`13pm`, `25:00`) don't parse.
+- `in 3 days at 5pm` applies the time to day-granular arithmetic;
+  minute/hour arithmetic keeps its own clock.
+- Explicit times never change confidence; ranges ignore trailing times.
+
+### Stable-API groundwork
+- docs/stability.md: semver commitment, the contract/tunable split
+  (signatures, range inclusivity, and conventions are contracts; exact
+  confidence values and interpretation wording are tunables), deprecation
+  process, and the pre-1.0 checklist.
+
 ## 0.2.0 — 2026-07-12
 
 Delivers the v0.2–v0.4 roadmap items: richer anchored phrases,

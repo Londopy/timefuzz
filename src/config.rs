@@ -1,5 +1,6 @@
 //! Parser configuration and the parse context threaded through grammar rules.
 
+use crate::locale::{Locale, EN};
 use chrono::{NaiveDate, NaiveDateTime, NaiveTime, Weekday};
 use std::collections::HashMap;
 
@@ -10,6 +11,8 @@ pub struct Cfg {
     pub week_start: Weekday,
     /// Whether "next <weekday>" skips today when today is that weekday.
     pub next_skips_today: bool,
+    /// Word tables used by the tokenizer (the i18n seam). English by default.
+    pub locale: &'static Locale,
 }
 
 impl Default for Cfg {
@@ -18,6 +21,7 @@ impl Default for Cfg {
             default_time: NaiveTime::from_hms_opt(9, 0, 0).unwrap(),
             week_start: Weekday::Mon,
             next_skips_today: true,
+            locale: &EN,
         }
     }
 }
@@ -30,6 +34,11 @@ pub struct Ctx<'a> {
     pub anchors: &'a HashMap<String, NaiveDate>,
     /// Business-calendar holiday predicate (weekends handled separately).
     pub is_holiday: &'a dyn Fn(NaiveDate) -> bool,
+    /// Effective time of day for date-only results: `cfg.default_time`, or an
+    /// explicit trailing clock time ("... at 3pm").
+    pub tod: NaiveTime,
+    /// Whether `tod` came from an explicit clock time in the input.
+    pub explicit_time: bool,
 }
 
 impl Ctx<'_> {
@@ -37,9 +46,18 @@ impl Ctx<'_> {
         self.now.date()
     }
 
-    /// Attach the configured default time to a date.
+    /// Attach the effective time of day to a date.
     pub fn at_default(&self, d: NaiveDate) -> NaiveDateTime {
-        d.and_time(self.cfg.default_time)
+        d.and_time(self.tod)
+    }
+
+    /// Human label for the effective time of day ("default 09:00" / "at 15:00").
+    pub fn tod_label(&self) -> String {
+        if self.explicit_time {
+            format!("at {}", self.tod.format("%H:%M"))
+        } else {
+            format!("default {}", self.tod.format("%H:%M"))
+        }
     }
 
     /// Inclusive day span: 00:00:00 .. 23:59:59.

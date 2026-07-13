@@ -1,0 +1,20 @@
+{"text": "next friday at 3pm", "expect": {"kind": "instant", "when": "2026-07-17T15:00:00", "confidence": 0.95, "interpretation_contains": "at 15:00"}}
+{"text": "tomorrow at 7:30", "expect": {"kind": "instant", "when": "2026-07-13T07:30:00", "confidence": 0.95}}
+{"text": "tomorrow at noon", "expect": {"kind": "instant", "when": "2026-07-13T12:00:00", "confidence": 0.95}}
+{"text": "friday at midnight", "expect": {"kind": "instant", "when": "2026-07-17T00:00:00", "confidence": 0.7}}
+{"text": "3pm", "expect": {"kind": "instant", "when": "2026-07-13T15:00:00", "confidence": 0.9, "interpretation_contains": "passed"}}
+{"text": "3 pm", "expect": {"kind": "instant", "when": "2026-07-13T15:00:00", "confidence": 0.9}}
+{"text": "9am", "expect": {"kind": "instant", "when": "2026-07-13T09:00:00", "confidence": 0.9}}
+{"text": "15:45", "expect": {"kind": "instant", "when": "2026-07-12T15:45:00", "confidence": 0.9, "interpretation_contains": "today"}}
+{"text": "noon", "expect": {"kind": "instant", "when": "2026-07-13T12:00:00", "confidence": 0.9}}
+{"text": "12pm", "expect": {"kind": "instant", "when": "2026-07-13T12:00:00", "confidence": 0.9}}
+{"text": "12am", "expect": {"kind": "instant", "when": "2026-07-13T00:00:00", "confidence": 0.9}}
+{"text": "in 3 days at 5pm", "expect": {"kind": "instant", "when": "2026-07-15T17:00:00", "confidence": 0.95}}
+{"text": "in 3 hours at 5pm", "expect": {"kind": "instant", "when": "2026-07-12T18:30:00", "confidence": 0.95}}
+{"text": "friday next week at 9am", "expect": {"kind": "instant", "when": "2026-07-17T09:00:00", "confidence": 0.95}}
+{"text": "2nd monday of march 2026 at 10am", "expect": {"kind": "instant", "when": "2026-03-09T10:00:00", "confidence": 0.9}}
+{"text": "the tuesday after my birthday at 5pm", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-04T17:00:00", "confidence": 0.9}}
+{"text": "end of month at 5pm", "expect": {"kind": "instant", "when": "2026-07-31T17:00:00", "confidence": 0.85}}
+{"text": "first business day of next month at 8am", "expect": {"kind": "instant", "when": "2026-08-03T08:00:00", "confidence": 0.85}}
+{"text": "25:00", "expect": {"kind": "no_parse", "reason_contains": "no grammar rule"}}
+{"text": "13pm", "expect": {"kind": "no_parse", "reason_contains": "no grammar rule"}}

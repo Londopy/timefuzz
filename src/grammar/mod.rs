@@ -46,6 +46,27 @@ const RULES: [Rule; 7] = [
 const DOMINANCE_GAP: f32 = 0.15;
 
 pub fn resolve(text: &str, tokens: &[Tok], ctx: &Ctx) -> Outcome {
+    // A trailing clock time ("... at 3pm") overrides the default time of day
+    // for date-only results; the remaining tokens resolve as usual.
+    if tokens.len() >= 2 {
+        if let Tok::Time(h, m) = &tokens[tokens.len() - 1] {
+            if let Some(t) = chrono::NaiveTime::from_hms_opt(*h, *m, 0) {
+                let ctx2 = Ctx {
+                    now: ctx.now,
+                    cfg: ctx.cfg,
+                    anchors: ctx.anchors,
+                    is_holiday: ctx.is_holiday,
+                    tod: t,
+                    explicit_time: true,
+                };
+                return resolve_inner(text, &tokens[..tokens.len() - 1], &ctx2);
+            }
+        }
+    }
+    resolve_inner(text, tokens, ctx)
+}
+
+fn resolve_inner(text: &str, tokens: &[Tok], ctx: &Ctx) -> Outcome {
     let mut candidates: Vec<Resolution> = Vec::new();
     let mut ambiguities: Vec<(Vec<Resolution>, String)> = Vec::new();
     let mut invalid: Option<String> = None;

@@ -118,7 +118,23 @@ period exactly.
 
 `working day(s)` is accepted as a synonym for `business day(s)`.
 
-## 8. Weekends → `Range`
+## 8. Clock times
+
+A **trailing** clock time overrides the default time of day for any
+date-producing rule (including `Ambiguous` candidates); ranges ignore it.
+
+| Pattern | Example | Result |
+|---|---|---|
+| `<phrase> at <time>` | `next friday at 3pm`, `end of month at 5pm` | that rule's date, at the given time |
+| bare `<time>` | `3pm`, `15:45`, `noon`, `midnight` | next occurrence: today, or tomorrow if already passed |
+
+Formats: `3pm`, `3 pm`, `3:30pm`, `7:30`, `15:45`, `noon`, `midnight`.
+`12pm` is noon, `12am` is midnight. Invalid times (`13pm`, `25:00`, `7:99`)
+don't tokenize as times. `in 3 days at 5pm` applies the time to day-granular
+arithmetic; `in 3 hours at 5pm` keeps hour arithmetic's own clock. Explicit
+times never change a rule's confidence.
+
+## 9. Weekends → `Range`
 
 A weekend is Saturday 00:00:00 through Sunday 23:59:59 (the Sat–Sun pair
 whose Saturday falls in the referenced week).
@@ -133,6 +149,13 @@ whose Saturday falls in the referenced week).
 ## Extending
 
 Grammar rules live in `src/grammar/` (one file per family; v0.2 extensions in
-`ext.rs`) and are registered in the `RULES` array in `src/grammar/mod.rs`. The
-grammar is structured so locales can be added later: the tokenizer's word
-tables are the only English-specific part of the pipeline.
+`ext.rs`) and are registered in the `RULES` array in `src/grammar/mod.rs`.
+
+Since v0.3 the grammar is **i18n-ready**: every language-specific word table
+(weekdays, months, units, keywords, number words, ordinals, fillers,
+shorthand, am/pm markers, named times) lives in the `Locale` struct in
+`src/locale.rs`, with English as the built-in default. Adding a language
+means writing one more `Locale` table — the tokenizer and grammar rules stay
+untouched, which the test suite proves with a miniature Spanish locale.
+Result `interpretation` strings remain English for now; localizing output is
+a separate, later concern.

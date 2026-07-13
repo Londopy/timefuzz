@@ -23,6 +23,7 @@ jobs:
           python-version: "3.12"
       - run: pip install ruff
       - run: ruff check python tests
+      - run: cargo test --lib # locale seam + table sanity tests
 
   test:
     runs-on: ${{ matrix.os }}

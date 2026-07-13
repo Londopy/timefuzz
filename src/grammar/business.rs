@@ -93,7 +93,7 @@ pub fn try_match(tokens: &[Tok], ctx: &Ctx) -> RuleResult {
             let normalized: Vec<Tok>;
             let rest = match rest {
                 [Tok::Unit(u)] => {
-                    normalized = vec![Tok::Kw(Kw::This), Tok::Unit(u.clone())];
+                    normalized = vec![Tok::Kw(Kw::This), Tok::Unit(*u)];
                     &normalized[..]
                 }
                 r => r,
@@ -119,7 +119,7 @@ pub fn try_match(tokens: &[Tok], ctx: &Ctx) -> RuleResult {
             let normalized: Vec<Tok>;
             let rest = match rest {
                 [Tok::Unit(u)] => {
-                    normalized = vec![Tok::Kw(Kw::This), Tok::Unit(u.clone())];
+                    normalized = vec![Tok::Kw(Kw::This), Tok::Unit(*u)];
                     &normalized[..]
                 }
                 r => r,

@@ -6,6 +6,7 @@ pub mod confidence;
 pub mod config;
 pub mod dates;
 pub mod grammar;
+pub mod locale;
 pub mod tokenize;
 pub mod types;
 
@@ -29,12 +30,14 @@ pub fn parse_str(
         };
     }
     let names: Vec<String> = anchors.keys().cloned().collect();
-    let tokens = tokenize::tokenize(trimmed, &names);
+    let tokens = tokenize::tokenize(trimmed, &names, cfg.locale);
     let ctx = Ctx {
         now,
         cfg,
         anchors,
         is_holiday,
+        tod: cfg.default_time,
+        explicit_time: false,
     };
     grammar::resolve(trimmed, &tokens, &ctx)
 }
@@ -101,6 +104,7 @@ mod py_binding {
                 .ok_or_else(|| PyValueError::new_err("invalid default_time"))?,
             week_start: weekday_from_u8(week_start)?,
             next_skips_today,
+            locale: &crate::locale::EN,
         };
 
         let is_holiday = |d: NaiveDate| -> bool {
