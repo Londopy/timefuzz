@@ -23,6 +23,12 @@ pub struct Locale {
     pub keywords: &'static [(&'static str, Kw)],
     /// Word -> number ("three", "a").
     pub number_words: &'static [(&'static str, i64)],
+    /// Word -> approximate count ("couple" -> 2, "few" -> 3). These carry the
+    /// same arithmetic as an exact count but a lower confidence, because the
+    /// speaker did not commit to a number.
+    pub fuzzy_words: &'static [(&'static str, i64)],
+    /// Words meaning "one half of the unit that follows" ("half an hour").
+    pub half_words: &'static [&'static str],
     /// Word -> ordinal ("first", "third").
     pub ordinal_words: &'static [(&'static str, u32)],
     /// Suffixes that turn digits into ordinals ("st" in "31st").
@@ -60,6 +66,12 @@ impl Locale {
     }
     pub fn number_word(&self, w: &str) -> Option<i64> {
         find(self.number_words, w)
+    }
+    pub fn fuzzy_word(&self, w: &str) -> Option<i64> {
+        find(self.fuzzy_words, w)
+    }
+    pub fn is_half(&self, w: &str) -> bool {
+        self.half_words.contains(&w)
     }
     pub fn special_time(&self, w: &str) -> Option<(u32, u32)> {
         find(self.special_times, w)
@@ -237,6 +249,8 @@ pub static EN: Locale = Locale {
         ("eleven", 11),
         ("twelve", 12),
     ],
+    fuzzy_words: &[("couple", 2), ("few", 3), ("several", 3)],
+    half_words: &["half"],
     ordinal_words: &[
         ("first", 1),
         ("second", 2),
@@ -277,7 +291,9 @@ mod tests {
             ("despues", Kw::After),
             ("de", Kw::Of),
         ],
-        number_words: &[("tres", 3)],
+        number_words: &[("tres", 3), ("un", 1), ("una", 1)],
+        fuzzy_words: &[("par", 2)],
+        half_words: &["media"],
         ordinal_words: &[("primero", 1)],
         ordinal_suffixes: &[],
         quarter_prefixes: &["t"],
@@ -334,5 +350,44 @@ mod tests {
         assert_eq!(dup(EN.units), None);
         assert_eq!(dup(EN.keywords), None);
         assert_eq!(dup(EN.number_words), None);
+        assert_eq!(dup(EN.fuzzy_words), None);
+    }
+
+    /// A word may only mean one thing: the tokenizer consults the tables in a
+    /// fixed order, so an overlap would silently shadow one of them.
+    #[test]
+    fn quantity_tables_do_not_overlap_other_tables() {
+        for (w, _) in EN.fuzzy_words {
+            assert!(EN.number_word(w).is_none(), "{w} is also a number word");
+            assert!(EN.unit(w).is_none(), "{w} is also a unit");
+            assert!(EN.keyword(w).is_none(), "{w} is also a keyword");
+            assert!(!EN.is_filler(w), "{w} is also a filler");
+        }
+        for w in EN.half_words {
+            assert!(EN.number_word(w).is_none(), "{w} is also a number word");
+            assert!(EN.unit(w).is_none(), "{w} is also a unit");
+            assert!(EN.keyword(w).is_none(), "{w} is also a keyword");
+            assert!(!EN.is_filler(w), "{w} is also a filler");
+        }
+    }
+
+    /// The duration vocabulary is a locale table like any other — a new
+    /// language gets bare durations for free, with no grammar changes.
+    #[test]
+    fn spanish_mini_locale_tokenizes_bare_durations() {
+        assert_eq!(
+            tokenize("tres dias", &[], &ES_MINI),
+            vec![Tok::Num(3), Tok::Unit(Unit::Day)]
+        );
+        // "un par de dias" -> Num(1) + Fuzzy(2) collapses to Fuzzy(2).
+        assert_eq!(
+            tokenize("un par de dias", &[], &ES_MINI),
+            vec![Tok::Fuzzy(2), Tok::Kw(Kw::Of), Tok::Unit(Unit::Day)]
+        );
+        // "media semana" -> Half + unit.
+        assert_eq!(
+            tokenize("media semana", &[], &ES_MINI),
+            vec![Tok::Half, Tok::Unit(Unit::Week)]
+        );
     }
 }

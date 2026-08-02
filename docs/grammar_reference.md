@@ -23,12 +23,54 @@ explains why.
 | `in N <unit>` | `in 3 days`, `in a week`, `in 45 minutes` | now + N·unit, clock kept |
 | `N <unit> from now` | `3 days from now` | now + N·unit |
 | `N <unit> ago` | `2 weeks ago` | now − N·unit |
+| bare `N <unit>` | `30 minutes`, `2 hrs`, `3 days` | now + N·unit — see §1a |
 
 Units: `minutes`, `hours`, `days`, `weeks`, `months`, `quarters`, `years`
 (and their abbreviations). Number words `one`–`twelve` and `a`/`an` work.
 Month/quarter/year offsets use calendar arithmetic with end-clamping:
 `in 1 month` from Jan 31 gives the last day of February. Offsets further than
 ~10 years out take a small confidence penalty and say "(distant horizon)".
+
+## 1a. Bare durations → `Instant`
+
+The `in` is optional. `30 minutes` means what `in 30 minutes` means and
+resolves to the same instant at the same confidence — writing a short interval
+without the marker is how people usually type an ETA.
+
+| Pattern | Example | Result |
+|---|---|---|
+| `N <unit>` | `30 minutes`, `2 hrs`, `a week`, `two weeks` | now + N·unit, confidence 0.95 |
+| `N business days` | `3 business days` | `Instant` at `default_time`, skipping weekends + `holidays` |
+| `half a <unit>` | `half an hour`, `half a day`, `half a year` | now + half the unit, confidence 0.95 |
+| `a couple/few/several <unit>` | `a couple hours`, `a few days` | now + 2/3/3 units, confidence 0.7 |
+
+**Halves** are supported where the halving is *exact* under the arithmetic
+this crate already uses for the unit: minutes, hours, days and weeks are fixed
+spans of seconds (`half a week` = 3 days 12 hours), and a year is twelve
+months so `half a year` is exactly six. `half a month` and `half a quarter`
+would have to be rounded to some number of days, so they raise `ParseError`
+rather than guess. The article is optional: `half hour` = `half an hour`.
+
+**Approximate quantities** (`couple`, `few`, `several`) do the same
+arithmetic but score at `BARE` (0.7) and say "approximately …" in the
+interpretation, so a caller confirming below 0.8 asks the user instead of
+scheduling silently. `a couple hours`, `couple hours` and `a couple of hours`
+are all the same phrase.
+
+**Leading unknown words are skipped.** `back in a couple hours`,
+`gimme 5 mins` and `ttyl in 2 hrs` all resolve, at a 0.05 confidence penalty,
+with the ignored words named in the interpretation
+(`approximately 2 hours from now (ignoring "back")`). This is the *only* rule
+that tolerates words it doesn't recognize, and only at the start of the
+phrase: `blah next friday`, `3 whole days` and `5 mins ok` are all
+`ParseError`.
+
+The rule stays out of the way of everything else. It needs an explicit
+quantity, so a bare `week` is still a period rather than "in a week", and the
+unit must end the phrase, so `3 days ago`, `2 weeks from now` and
+`3 business days after the wedding` still belong to their own rules. Where it
+does overlap a marked form, both rules produce the same value and the
+dispatcher collapses them — no spurious `Ambiguous`.
 
 ## 2. Period spans → `Range`
 
@@ -152,8 +194,9 @@ Grammar rules live in `src/grammar/` (one file per family; v0.2 extensions in
 `ext.rs`) and are registered in the `RULES` array in `src/grammar/mod.rs`.
 
 Since v0.3 the grammar is **i18n-ready**: every language-specific word table
-(weekdays, months, units, keywords, number words, ordinals, fillers,
-shorthand, am/pm markers, named times) lives in the `Locale` struct in
+(weekdays, months, units, keywords, number words, approximate quantities,
+"half", ordinals, fillers, shorthand, am/pm markers, named times) lives in
+the `Locale` struct in
 `src/locale.rs`, with English as the built-in default. Adding a language
 means writing one more `Locale` table — the tokenizer and grammar rules stay
 untouched, which the test suite proves with a miniature Spanish locale.

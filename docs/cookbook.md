@@ -59,6 +59,35 @@ async def on_remind(msg, when_text: str):
         schedule(msg, r.when)
 ```
 
+## ETAs people actually type
+
+Short intervals arrive without the `in`, and often with a word or two of
+chatter in front. All of these resolve:
+
+```python
+tf.parse("30 minutes")            # 0.95 — same as "in 30 minutes"
+tf.parse("2 hrs")                 # 0.95
+tf.parse("half an hour")          # 0.95
+tf.parse("a couple hours")        # 0.70 — "approximately 2 hours from now"
+tf.parse("back in a couple hours")# 0.65 — 'approximately … (ignoring "back")'
+```
+
+The confidence is the whole point here: an exact amount is safe to act on,
+while an approximate one ("a couple", "a few") lands at 0.7 so the same
+threshold you already use sends it to a confirmation prompt.
+
+```python
+r = tf.parse(user_text)
+if r.confidence >= 0.8:
+    set_eta(r.when)
+else:
+    ask(f"Did you mean {r.interpretation}?")   # "approximately 2 hours from now"
+```
+
+Only *leading* chatter is skipped, and it is always named in the
+interpretation — so `3 whole days` and `5 mins ok` still raise `ParseError`
+rather than quietly dropping a word you meant.
+
 ## Per-user anchors
 
 ```python

@@ -1,0 +1,46 @@
+{"text": "30 minutes", "expect": {"kind": "instant", "when": "2026-07-12T16:00:00", "confidence": 0.95, "interpretation_contains": "30 minutes from now"}}
+{"text": "45 mins", "expect": {"kind": "instant", "when": "2026-07-12T16:15:00", "confidence": 0.95}}
+{"text": "2 hrs", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.95, "interpretation_contains": "2 hours from now"}}
+{"text": "90 seconds", "expect": {"kind": "no_parse"}}
+{"text": "3 days", "expect": {"kind": "instant", "when": "2026-07-15T15:30:00", "confidence": 0.95}}
+{"text": "a week", "expect": {"kind": "instant", "when": "2026-07-19T15:30:00", "confidence": 0.95, "interpretation_contains": "1 week from now"}}
+{"text": "two weeks", "expect": {"kind": "instant", "when": "2026-07-26T15:30:00", "confidence": 0.95}}
+{"text": "3 months", "expect": {"kind": "instant", "when": "2026-10-12T15:30:00", "confidence": 0.95}}
+{"text": "2 years", "expect": {"kind": "instant", "when": "2028-07-12T15:30:00", "confidence": 0.95}}
+{"text": "10 mins", "expect": {"kind": "instant", "when": "2026-07-12T15:40:00", "confidence": 0.95}}
+{"text": "1 day", "expect": {"kind": "instant", "when": "2026-07-13T15:30:00", "confidence": 0.95, "interpretation_contains": "1 day from now"}}
+{"text": "half an hour", "expect": {"kind": "instant", "when": "2026-07-12T16:00:00", "confidence": 0.95, "interpretation_contains": "half an hour from now"}}
+{"text": "half hour", "expect": {"kind": "instant", "when": "2026-07-12T16:00:00", "confidence": 0.95}}
+{"text": "half a minute", "expect": {"kind": "instant", "when": "2026-07-12T15:30:30", "confidence": 0.95}}
+{"text": "half a day", "expect": {"kind": "instant", "when": "2026-07-13T03:30:00", "confidence": 0.95}}
+{"text": "half a week", "expect": {"kind": "instant", "when": "2026-07-16T03:30:00", "confidence": 0.95}}
+{"text": "half a year", "expect": {"kind": "instant", "when": "2027-01-12T15:30:00", "confidence": 0.95, "interpretation_contains": "half a year"}}
+{"text": "half a month", "expect": {"kind": "no_parse"}}
+{"text": "half a quarter", "expect": {"kind": "no_parse"}}
+{"text": "a couple hours", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.7, "interpretation_contains": "approximately 2 hours"}}
+{"text": "a couple of hours", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.7}}
+{"text": "couple hours", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.7}}
+{"text": "a few days", "expect": {"kind": "instant", "when": "2026-07-15T15:30:00", "confidence": 0.7, "interpretation_contains": "approximately 3 days"}}
+{"text": "a few minutes", "expect": {"kind": "instant", "when": "2026-07-12T15:33:00", "confidence": 0.7}}
+{"text": "several weeks", "expect": {"kind": "instant", "when": "2026-08-02T15:30:00", "confidence": 0.7}}
+{"text": "back in a couple hours", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.65, "interpretation_contains": "ignoring \"back\""}}
+{"text": "gimme 5 mins", "expect": {"kind": "instant", "when": "2026-07-12T15:35:00", "confidence": 0.9, "interpretation_contains": "ignoring \"gimme\""}}
+{"text": "ttyl in 2 hrs", "expect": {"kind": "instant", "when": "2026-07-12T17:30:00", "confidence": 0.9}}
+{"text": "3 business days", "expect": {"kind": "instant", "when": "2026-07-15T09:00:00", "confidence": 0.9, "interpretation_contains": "3 business days"}}
+{"text": "a couple business days", "expect": {"kind": "instant", "when": "2026-07-14T09:00:00", "confidence": 0.7}}
+{"text": "30 minutes at 5pm", "expect": {"kind": "instant", "when": "2026-07-12T16:00:00", "confidence": 0.95}}
+{"text": "3 days at 5pm", "expect": {"kind": "instant", "when": "2026-07-15T17:00:00", "confidence": 0.95}}
+{"text": "week", "expect": {"kind": "no_parse"}}
+{"text": "month", "expect": {"kind": "no_parse"}}
+{"text": "half", "expect": {"kind": "no_parse"}}
+{"text": "a couple", "expect": {"kind": "no_parse"}}
+{"text": "5 apples", "expect": {"kind": "no_parse"}}
+{"text": "3 whole days", "expect": {"kind": "no_parse"}}
+{"text": "2 weekends", "expect": {"kind": "no_parse"}}
+{"text": "an hour and a half", "expect": {"kind": "no_parse"}}
+{"text": "in 30 minutes", "expect": {"kind": "instant", "when": "2026-07-12T16:00:00", "confidence": 0.95}}
+{"text": "in 3 days", "expect": {"kind": "instant", "when": "2026-07-15T15:30:00", "confidence": 0.95}}
+{"text": "in 3 business days", "expect": {"kind": "instant", "when": "2026-07-15T09:00:00", "confidence": 0.9, "interpretation_contains": "from today"}}
+{"text": "3 days ago", "expect": {"kind": "instant", "when": "2026-07-09T15:30:00", "confidence": 0.95}}
+{"text": "2 weeks from now", "expect": {"kind": "instant", "when": "2026-07-26T15:30:00", "confidence": 0.95}}
+{"text": "2 weeks after my birthday", "anchors": {"my birthday": "2026-08-03"}, "expect": {"kind": "instant", "when": "2026-08-17T09:00:00", "confidence": 0.9}}

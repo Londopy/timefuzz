@@ -47,6 +47,11 @@ pub enum Kw {
 #[derive(Debug, Clone, PartialEq)]
 pub enum Tok {
     Num(i64),
+    /// An approximate count: "a couple" -> 2, "a few" -> 3. Arithmetically a
+    /// number, but the speaker did not commit to it, so rules score it lower.
+    Fuzzy(i64),
+    /// "half" as a quantity modifier, as in "half an hour".
+    Half,
     /// Ordinal: "2nd", "third" -> 3.
     Ord(u32),
     Weekday(Weekday),
@@ -167,6 +172,10 @@ pub fn tokenize(text: &str, anchor_names: &[String], loc: &Locale) -> Vec<Tok> {
             toks.push(Tok::Kw(k));
         } else if let Some(n) = loc.number_word(w) {
             toks.push(Tok::Num(n));
+        } else if let Some(n) = loc.fuzzy_word(w) {
+            toks.push(Tok::Fuzzy(n));
+        } else if loc.is_half(w) {
+            toks.push(Tok::Half);
         } else {
             toks.push(Tok::Word(w.to_string()));
         }
@@ -175,6 +184,8 @@ pub fn tokenize(text: &str, anchor_names: &[String], loc: &Locale) -> Vec<Tok> {
     // Merge passes:
     //   "business" + day-unit          -> BusinessDay
     //   Num + standalone am/pm word    -> Time ("3 pm")
+    //   Num(1) + Fuzzy                 -> Fuzzy ("a couple" == "couple")
+    //   Half + Num(1)                  -> Half   ("half an hour" == "half hour")
     let mut merged: Vec<Tok> = Vec::with_capacity(toks.len());
     let mut i = 0;
     while i < toks.len() {
@@ -183,6 +194,19 @@ pub fn tokenize(text: &str, anchor_names: &[String], loc: &Locale) -> Vec<Tok> {
             && toks[i + 1] == Tok::Unit(Unit::Day)
         {
             merged.push(Tok::Unit(Unit::BusinessDay));
+            i += 2;
+            continue;
+        }
+        // The article in "a couple hours" / "an hour and a half" is noise
+        // once the fuzzy word carries the count.
+        if let (Tok::Num(1), Some(Tok::Fuzzy(n))) = (&toks[i], toks.get(i + 1)) {
+            merged.push(Tok::Fuzzy(*n));
+            i += 2;
+            continue;
+        }
+        // "half an hour": the "an" belongs to the unit, not to a count.
+        if toks[i] == Tok::Half && toks.get(i + 1) == Some(&Tok::Num(1)) {
+            merged.push(Tok::Half);
             i += 2;
             continue;
         }

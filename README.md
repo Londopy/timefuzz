@@ -108,10 +108,13 @@ class Config:
     holidays: Callable[[date], bool] | None = None   # business-day hook
 ```
 
-## What the grammar understands (v0.2)
+## What the grammar understands (v0.4)
 
 - **Relative offsets:** `in 3 days`, `2 weeks ago`, `3 days from now`,
   `in a week`, `tomorrow`, `yesterday`, `today`, `now`
+- **Bare durations** (the `in` is optional): `30 minutes`, `2 hrs`, `3 days`,
+  `half an hour`, `half a day`, `a couple hours`, `a few days`,
+  `back in a couple hours`
 - **Period spans:** `next week`, `this month`, `last quarter`, `next year`,
   bare month names (`august`)
 - **Weekday navigation:** `next friday`, `this tuesday`, `last monday`,
@@ -146,6 +149,10 @@ These are deliberate, documented choices — see the config knobs above:
   trailing time (`… at 3pm`) overrides it.
 - **Arithmetic offsets keep the clock:** `in 3 days` = now + 72h;
   `tomorrow` = tomorrow at `default_time`.
+- **The `in` is optional.** `30 minutes` resolves exactly like
+  `in 30 minutes`. Approximate amounts (`a couple hours`) resolve too, but at
+  0.7 so you confirm rather than schedule silently, and `half a month` stays
+  a `ParseError` because there is no exact half of a calendar month.
 - **Ranges are inclusive**, `00:00:00` through `23:59:59` of the last day.
 - **Weekends are Sat–Sun**, whatever `week_start` says.
 - **Naive by default.** Set `Config(tz=...)` to get tz-aware results;
@@ -180,7 +187,8 @@ fixed reference `now`) to expected outputs. Adding a phrase = adding a line.
 
 - **v0.2** — ✅ richer anchored phrases + business-calendar rules
 - **v0.3** — ✅ confidence-model refinement, more `Ambiguous` candidates
-- **v0.4** — ✅ corpus expansion, benches, cookbook growth
+- **v0.4** — ✅ corpus expansion, benches, cookbook growth,
+  ✅ bare durations (`30 minutes`, `half an hour`, `a couple hours`)
 - **v1.0** — ✅ i18n-ready grammar structure (`Locale` seam, English-only),
   ✅ clock-time support, ✅ written [stability policy](docs/stability.md);
   remaining: a soak period on 0.3.x, then the freeze

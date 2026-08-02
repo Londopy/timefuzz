@@ -8,12 +8,12 @@ same config always produces the same score. There are no learned weights.
 | Score | Constant | Applies to | Examples |
 |---|---|---|---|
 | 1.00 | `CERTAIN` | fully specified, one reading | `now` |
-| 0.95 | `EXACT` | exact grammatical matches | `in 3 days`, `next friday`, `today`, `next business day`, `the day after <anchor>`, `friday next week`, a bare registered anchor |
-| 0.90 | `STRONG` | strong matches that rest on a documented convention | `next sunday` said on a Sunday, `<weekday> after <anchor>`, `next week`, `in 3 business days`, `this weekend`, `the week after <anchor>`, ordinals with an explicit year |
+| 0.95 | `EXACT` | exact grammatical matches | `in 3 days`, `30 minutes`, `half an hour`, `next friday`, `today`, `next business day`, `the day after <anchor>`, `friday next week`, a bare registered anchor |
+| 0.90 | `STRONG` | strong matches that rest on a documented convention | `next sunday` said on a Sunday, `<weekday> after <anchor>`, `next week`, `in 3 business days`, `3 business days`, `this weekend`, `the week after <anchor>`, ordinals with an explicit year |
 | 0.85 | `CALENDAR` | calendar-derived results that assume the current cycle | `2nd monday of march`, `end of q3`, `eom`, `first business day of next month` |
 | 0.80 | `VAGUE` | vague-span words cap here | `sometime next week` |
 | 0.75 | `PART` | sub-period fuzz; month names that assume a year | `early march`, `mid month`, `this friday` when already past |
-| 0.70 | `BARE` | bare convention-heavy phrases | `friday`, `august` |
+| 0.70 | `BARE` | bare convention-heavy phrases; approximate quantities | `friday`, `august`, `a couple hours`, `a few days` |
 | 0.70 | `DOUBLE_VAGUE` | doubly-hedged phrases | `sometime early next month` |
 
 ## Modifiers
@@ -28,6 +28,10 @@ same config always produces the same score. There are no learned weights.
 - **Horizon penalty.** Relative offsets further than ~10 years (3650 days)
   from `now` lose 0.05 and the interpretation appends "(distant horizon)":
   `in 15 years` scores 0.90 instead of 0.95.
+- **Ignored-words penalty.** The bare-duration rule is allowed to read past
+  unrecognized *leading* words (`back in a couple hours`, `gimme 5 mins`).
+  Doing so costs 0.05 and the interpretation names what was skipped:
+  `(ignoring "back")`. No other rule skips words.
 - **Ambiguity penalty.** When several rule families survive with comparable
   confidence (within 0.15 of each other), the parse returns `Ambiguous` and
   every candidate is penalized by 0.1 per extra candidate.

@@ -1,5 +1,57 @@
 # Changelog
 
+## 0.4.0 — 2026-08-01
+
+Bare durations: the `in` in `in 30 minutes` is now optional.
+
+### New grammar rule — `<qty> <unit>` (`src/grammar/duration.rs`)
+- `30 minutes`, `2 hrs`, `3 days`, `a week`, `two weeks`, `6 months` resolve
+  exactly like their `in …` forms, at the same confidence. Writing a short
+  interval without the marker is the most common way people type an ETA and
+  previously raised `ParseError`.
+- `half an hour`, `half hour`, `half a day`, `half a week`, `half a minute`
+  and `half a year` are supported. A unit is halved only where the halving is
+  exact under the arithmetic this crate already uses for it, so `half a month`
+  and `half a quarter` still don't parse rather than silently rounding.
+- Approximate quantities — `a couple hours`, `a few days`, `several weeks` —
+  resolve to 2/3/3 units at `BARE` confidence with "approximately …" in the
+  interpretation, so callers confirm instead of scheduling silently. The
+  article is optional (`couple hours`) and `of` is tolerated
+  (`a couple of hours`).
+- `3 business days` works bare too, skipping weekends and `holidays`.
+- Unrecognized **leading** words are read past — `back in a couple hours`,
+  `gimme 5 mins`, `ttyl in 2 hrs` — at a 0.05 confidence cost, with the
+  ignored words named in the interpretation. This tolerance is scoped to this
+  one rule; every other rule still matches the whole token stream strictly, so
+  `blah next friday` remains a `ParseError`.
+
+### Deliberately still unparsed
+`week` (a bare unit is a period, not a duration), `5 apples`, `3 whole days`
+(unknown words are only skipped at the *start*), `5 mins ok`, `2 weekends`,
+`an hour and a half`, `90 seconds`.
+
+### Locale
+- Two new `Locale` tables — `fuzzy_words` and `half_words` — so the duration
+  vocabulary crosses the i18n seam like every other word list; the tokenizer
+  and grammar stay language-neutral. New `Tok::Fuzzy(i64)` and `Tok::Half`
+  token types, with tokenizer merges for `a couple` → `couple` and
+  `half an hour` → `half hour`.
+- The miniature Spanish locale now proves bare durations tokenize in another
+  language with zero grammar changes.
+
+### Compatibility
+No phrase that parsed before 0.4.0 changes its result; verified by a
+differential run of every corpus and documented phrase (227) against 0.3.1 —
+198 identical, 29 previously `ParseError`, 0 changed results. Adding
+`Tok::Fuzzy`/`Tok::Half` is source-breaking only for downstream Rust code
+matching exhaustively on `Tok`; the Python API is unchanged.
+
+### Tests
+- `tests/corpus_v04.jsonl` (46 cases) and `tests/test_duration.py` (59 cases);
+  suite is 329 green, up from 224.
+- `parse_durations_6` added to the benches, alongside the untouched
+  `parse_corpus_18` so earlier numbers stay comparable.
+
 ## 0.3.1 — 2026-07-12
 
 - Release CI: the retired `macos-13` runner label left the macOS x86-64 wheel

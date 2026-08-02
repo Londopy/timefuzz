@@ -6,6 +6,7 @@
 
 pub mod anchored;
 pub mod business;
+pub mod duration;
 pub mod ext;
 pub mod ordinal;
 pub mod relative;
@@ -32,7 +33,10 @@ pub enum RuleResult {
 
 type Rule = fn(&[Tok], &Ctx) -> RuleResult;
 
-const RULES: [Rule; 7] = [
+// Order matters only for value-dedup: the first rule to produce a given value
+// keeps its confidence and wording. `duration` overlaps the marked forms in
+// `relative`/`business` on purpose, so it runs last and defers to them.
+const RULES: [Rule; 8] = [
     relative::try_match,
     weekday::try_match,
     ordinal::try_match,
@@ -40,6 +44,7 @@ const RULES: [Rule; 7] = [
     vague::try_match,
     business::try_match,
     ext::try_match,
+    duration::try_match,
 ];
 
 /// Confidence gap for the top candidate to win outright.

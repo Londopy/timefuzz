@@ -29,6 +29,17 @@ const PHRASES: &[&str] = &[
     "august",
 ];
 
+/// v0.4 bare durations, benched separately so `parse_corpus_18` stays
+/// comparable with earlier runs.
+const DURATIONS: &[&str] = &[
+    "30 minutes",
+    "2 hrs",
+    "half an hour",
+    "back in a couple hours",
+    "3 days",
+    "a few minutes",
+];
+
 fn bench_parse(c: &mut Criterion) {
     let now = "2026-07-12T15:30:00".parse().unwrap();
     let cfg = Cfg::default();
@@ -54,6 +65,14 @@ fn bench_parse(c: &mut Criterion) {
                 &cfg,
                 &no_holidays,
             ))
+        })
+    });
+
+    c.bench_function("parse_durations_6", |b| {
+        b.iter(|| {
+            for p in DURATIONS {
+                black_box(parse_str(black_box(p), now, &anchors, &cfg, &no_holidays));
+            }
         })
     });
 

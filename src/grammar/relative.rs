@@ -8,7 +8,11 @@ use crate::tokenize::{Kw, Tok, Unit};
 use crate::types::{Resolution, Value};
 use chrono::{Datelike, Duration, NaiveDateTime};
 
-fn shift(now: NaiveDateTime, unit: &Unit, n: i64) -> Option<(NaiveDateTime, &'static str)> {
+pub(super) fn shift(
+    now: NaiveDateTime,
+    unit: &Unit,
+    n: i64,
+) -> Option<(NaiveDateTime, &'static str)> {
     Some(match unit {
         Unit::Minute => (now + Duration::minutes(n), "minute"),
         Unit::Hour => (now + Duration::hours(n), "hour"),
@@ -33,7 +37,7 @@ fn shift(now: NaiveDateTime, unit: &Unit, n: i64) -> Option<(NaiveDateTime, &'st
 
 /// An explicit trailing time ("in 3 days at 5pm") overrides the clock for
 /// date-granular units; minute/hour arithmetic keeps its own clock.
-fn apply_tod(ctx: &Ctx, unit: &Unit, when: NaiveDateTime) -> NaiveDateTime {
+pub(super) fn apply_tod(ctx: &Ctx, unit: &Unit, when: NaiveDateTime) -> NaiveDateTime {
     if ctx.explicit_time && !matches!(unit, Unit::Minute | Unit::Hour) {
         when.date().and_time(ctx.tod)
     } else {
@@ -41,7 +45,7 @@ fn apply_tod(ctx: &Ctx, unit: &Unit, when: NaiveDateTime) -> NaiveDateTime {
     }
 }
 
-fn plural(n: i64, s: &str) -> String {
+pub(super) fn plural(n: i64, s: &str) -> String {
     if n == 1 {
         format!("1 {s}")
     } else {
