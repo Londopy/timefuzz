@@ -11,7 +11,7 @@ from datetime import date, datetime, timedelta
 import pytest
 
 import timefuzz as tf
-from timefuzz import Ambiguous, Instant, Range
+from timefuzz import Instant, Range
 
 
 class TestBareDurationsMatchTheMarkedForm:

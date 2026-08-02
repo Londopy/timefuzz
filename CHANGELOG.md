@@ -52,6 +52,15 @@ matching exhaustively on `Tok`; the Python API is unchanged.
 - `parse_durations_6` added to the benches, alongside the untouched
   `parse_corpus_18` so earlier numbers stay comparable.
 
+### CI
+- Pinned the ruff rule selection in `pyproject.toml` (`[tool.ruff.lint]
+  select = ["E4", "E7", "E9", "F"]`). CI installs ruff unpinned and ruff's
+  default selection has since grown, so the lint job had started failing on
+  code that had not changed — 130 findings on the 0.3.1 tree, mostly `DTZ001`
+  ("naive datetime"), which argues against this library's documented
+  naive-by-default behaviour and is now ignored for `tests/`. The selection
+  above is what the project was already effectively linting against.
+
 ## 0.3.1 — 2026-07-12
 
 - Release CI: the retired `macos-13` runner label left the macOS x86-64 wheel
