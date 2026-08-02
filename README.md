@@ -1,5 +1,12 @@
 # timefuzz
 
+[![PyPI](https://img.shields.io/pypi/v/timefuzz)](https://pypi.org/project/timefuzz/)
+[![Python versions](https://img.shields.io/pypi/pyversions/timefuzz)](https://pypi.org/project/timefuzz/)
+[![CI](https://github.com/Londopy/timefuzz/actions/workflows/ci.yml/badge.svg)](https://github.com/Londopy/timefuzz/actions/workflows/ci.yml)
+[![Release](https://github.com/Londopy/timefuzz/actions/workflows/release.yml/badge.svg)](https://github.com/Londopy/timefuzz/actions/workflows/release.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Londopy/timefuzz/blob/main/LICENSE)
+[![Rust core](https://img.shields.io/badge/core-Rust-orange)](https://github.com/Londopy/timefuzz/tree/main/src)
+
 > Fuzzy, natural-language time parsing that goes past `dateparser`.
 
 `timefuzz` resolves human phrases like *"sometime next week"*, *"the Tuesday
@@ -136,8 +143,8 @@ class Config:
   `end of next month`, `first business day of next month`,
   `last business day of the month`, `eow`/`eom`/`eoq`/`eoy`
 
-See [docs/grammar_reference.md](docs/grammar_reference.md) for the complete
-rule catalogue and [docs/cookbook.md](docs/cookbook.md) for recipes.
+See [docs/grammar_reference.md](https://github.com/Londopy/timefuzz/blob/main/docs/grammar_reference.md) for the complete
+rule catalogue and [docs/cookbook.md](https://github.com/Londopy/timefuzz/blob/main/docs/cookbook.md) for recipes.
 
 ## Conventions (the fine print)
 
@@ -164,7 +171,7 @@ These are deliberate, documented choices — see the config knobs above:
 - **Confidence is deterministic**, not learned — the same phrase always gets
   the same score, offsets past ~10 years are trusted slightly less, and
   stacked hedges (`sometime early …`) cap lower.
-  See [docs/confidence.md](docs/confidence.md).
+  See [docs/confidence.md](https://github.com/Londopy/timefuzz/blob/main/docs/confidence.md).
 
 ## Development
 
@@ -190,10 +197,10 @@ fixed reference `now`) to expected outputs. Adding a phrase = adding a line.
 - **v0.4** — ✅ corpus expansion, benches, cookbook growth,
   ✅ bare durations (`30 minutes`, `half an hour`, `a couple hours`)
 - **v1.0** — ✅ i18n-ready grammar structure (`Locale` seam, English-only),
-  ✅ clock-time support, ✅ written [stability policy](docs/stability.md);
-  remaining: a soak period on 0.3.x, then the freeze
+  ✅ clock-time support, ✅ written [stability policy](https://github.com/Londopy/timefuzz/blob/main/docs/stability.md);
+  remaining: a soak period on 0.4.x, then the freeze
 
-See [CHANGELOG.md](CHANGELOG.md) for details.
+See [CHANGELOG.md](https://github.com/Londopy/timefuzz/blob/main/CHANGELOG.md) for details.
 
 ## License
 
