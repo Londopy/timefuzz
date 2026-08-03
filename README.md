@@ -202,6 +202,35 @@ fixed reference `now`) to expected outputs. Adding a phrase = adding a line.
 
 See [CHANGELOG.md](https://github.com/Londopy/timefuzz/blob/main/CHANGELOG.md) for details.
 
+## Using timefuzz? Add a badge
+
+[![parsed by timefuzz](https://img.shields.io/badge/parsed%20by-timefuzz-007ec6)](https://github.com/Londopy/timefuzz)
+
+```markdown
+[![parsed by timefuzz](https://img.shields.io/badge/parsed%20by-timefuzz-007ec6)](https://github.com/Londopy/timefuzz)
+```
+
+Or as HTML:
+
+```html
+<a href="https://github.com/Londopy/timefuzz"><img alt="parsed by timefuzz"
+   src="https://img.shields.io/badge/parsed%20by-timefuzz-007ec6"></a>
+```
+
+If "capability" reads better than "credit" in your README, this wording says
+what your project does rather than crediting this one:
+
+[![time parsing: timefuzz](https://img.shields.io/badge/time%20parsing-timefuzz-007ec6)](https://github.com/Londopy/timefuzz)
+
+```markdown
+[![time parsing: timefuzz](https://img.shields.io/badge/time%20parsing-timefuzz-007ec6)](https://github.com/Londopy/timefuzz)
+```
+
+Rendered by [shields.io](https://shields.io) — nothing to install, and no call
+back to this project. Append `?style=flat-square` or `?style=for-the-badge` if
+that suits your README better. If you reword it, mind shields' escaping: spaces
+are `%20` (or `_`), and a literal hyphen has to be doubled (`--`).
+
 ## License
 
 MIT
