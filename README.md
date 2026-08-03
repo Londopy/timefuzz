@@ -6,6 +6,7 @@
 [![Release](https://github.com/Londopy/timefuzz/actions/workflows/release.yml/badge.svg)](https://github.com/Londopy/timefuzz/actions/workflows/release.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Londopy/timefuzz/blob/main/LICENSE)
 [![Rust core](https://img.shields.io/badge/core-Rust-orange)](https://github.com/Londopy/timefuzz/tree/main/src)
+[![parsed by timefuzz](https://img.shields.io/badge/parsed%20by-timefuzz-007ec6)](#using-timefuzz-add-a-badge)
 
 > Fuzzy, natural-language time parsing that goes past `dateparser`.
 
